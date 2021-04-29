@@ -22,20 +22,22 @@ class UserModel {
     this.name,
     this.department,
     this.batch,
+    this.contacts,
   });
   int id;
   String email;
   String name;
   String department;
   String batch;
+  List contacts;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        id: json["id"],
-        email: json["Email"],
-        name: json["Name"],
-        department: json["Department"],
-        batch: json["Batch"],
-      );
+      id: json["id"],
+      email: json["Email"],
+      name: json["Name"],
+      department: json["Department"],
+      batch: json["Batch"],
+      contacts: json["Contacts"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -43,6 +45,7 @@ class UserModel {
         "Name": name,
         "Department": department,
         "Batch": batch,
+        "Contacts": contacts
       };
 }
 

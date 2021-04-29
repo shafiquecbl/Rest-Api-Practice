@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 class APIManager {
   var client = http.Client();
   var userModel;
-  var contactModel;
 
   ///////////////////////////////////////////////////////////
 
@@ -57,19 +56,5 @@ class APIManager {
     }).catchError((e) {
       print('NOOOOOOOOOOOOOOOOOOOO');
     });
-  }
-
-  ////////////////////////////////////////////////////////////////////////
-
-  Future<Contacts> getContacts(int id) async {
-    return await client.get('http://localhost:3000/Users/$id').then((response) {
-      print(response.statusCode);
-      if (response.statusCode == 200) {
-        var jsonString = response.body;
-        var jsonMap = json.decode(jsonString);
-        contactModel = Contacts.fromJson(jsonMap);
-      }
-      return contactModel;
-    }).catchError((e) => contactModel);
   }
 }
