@@ -13,10 +13,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<MyApi> _userModel;
+  Future<User> _userModel;
+  Future<Contacts> _contactsModel;
   @override
   void initState() {
     _userModel = APIManager().getUsers();
+    _contactsModel = APIManager().getContacts(1);
     super.initState();
   }
 
@@ -40,75 +42,80 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: Icon(Icons.add))
         ],
       ),
-      body: StreamBuilder<MyApi>(
-        stream: Stream.fromFuture(_userModel),
+      body: FutureBuilder<Contacts>(
+        future: _contactsModel,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-                itemCount: snapshot.data.users.length,
-                itemBuilder: (context, index) {
-                  var user = snapshot.data.users[index];
-                  return Card(
-                    child: ExpansionTile(
-                      title: Text(user.email),
-                      children: [
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                Navigator.of(context, rootNavigator: true)
-                                    .push(MaterialPageRoute(
-                                        builder: (_) => UpdateData(
-                                              id: user.id,
-                                              email: user.email,
-                                              name: user.name,
-                                              department: user.department,
-                                              batch: user.batch,
-                                            )))
-                                    .then((value) => setState(() {
-                                          _userModel = APIManager().getUsers();
-                                        }));
-                              },
-                              icon: Icon(Icons.update),
-                              label: Text('Update'),
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.green,
-                                  minimumSize: Size(150, 45),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30))),
-                            ),
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                APIManager().deleteUsers(user.id).then((value) {
-                                  setState(() {
-                                    _userModel = APIManager().getUsers();
-                                  });
-                                  showDeletedDialog(context);
-                                });
-                              },
-                              icon: Icon(Icons.delete),
-                              label: Text('Delete'),
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.red,
-                                  minimumSize: Size(150, 45),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30))),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        )
-                      ],
-                    ),
-                  );
-                });
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          if (snapshot.data.contacts.length != 0) {
+            return Text('${snapshot.data.contacts[0].name}');
+            // return ListView.builder(
+            //     itemCount: snapshot.data.users.length,
+            //     itemBuilder: (context, index) {
+            //       var user = snapshot.data.users[index];
+            //       return Card(
+            //         child: ExpansionTile(
+            //           title: Text(user.email),
+            //           children: [
+            //             SizedBox(
+            //               height: 20,
+            //             ),
+            //             Row(
+            //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //               children: [
+            //                 ElevatedButton.icon(
+            //                   onPressed: () {
+            //                     Navigator.of(context, rootNavigator: true)
+            //                         .push(MaterialPageRoute(
+            //                             builder: (_) => UpdateData(
+            //                                   id: user.id,
+            //                                   email: user.email,
+            //                                   name: user.name,
+            //                                   department: user.department,
+            //                                   batch: user.batch,
+            //                                 )))
+            //                         .then((value) => setState(() {
+            //                               _userModel = APIManager().getUsers();
+            //                             }));
+            //                   },
+            //                   icon: Icon(Icons.update),
+            //                   label: Text('Update'),
+            //                   style: ElevatedButton.styleFrom(
+            //                       primary: Colors.green,
+            //                       minimumSize: Size(150, 45),
+            //                       shape: RoundedRectangleBorder(
+            //                           borderRadius: BorderRadius.circular(30))),
+            //                 ),
+            //                 ElevatedButton.icon(
+            //                   onPressed: () {
+            //                     APIManager().deleteUsers(user.id).then((value) {
+            //                       setState(() {
+            //                         _userModel = APIManager().getUsers();
+            //                       });
+            //                       showDeletedDialog(context);
+            //                     });
+            //                   },
+            //                   icon: Icon(Icons.delete),
+            //                   label: Text('Delete'),
+            //                   style: ElevatedButton.styleFrom(
+            //                       primary: Colors.red,
+            //                       minimumSize: Size(150, 45),
+            //                       shape: RoundedRectangleBorder(
+            //                           borderRadius: BorderRadius.circular(30))),
+            //                 ),
+            //               ],
+            //             ),
+            //             SizedBox(
+            //               height: 20,
+            //             )
+            //           ],
+            //         ),
+            //       );
+            //     });
           } else
-            return Center(child: CircularProgressIndicator());
+            return Center(child: Text('No Data'));
         },
       ),
     );

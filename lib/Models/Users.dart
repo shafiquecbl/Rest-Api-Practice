@@ -1,15 +1,13 @@
-// MyApi welcomeFromJson(String str) => MyApi.fromJson(json.decode(str));
-// String welcomeToJson(MyApi data) => json.encode(data.toJson());
-
-class MyApi {
-  MyApi({
+class User {
+  User({
     this.users,
   });
 
-  List<User> users;
+  List<UserModel> users;
 
-  factory MyApi.fromJson(Map<String, dynamic> json) => MyApi(
-        users: List<User>.from(json["Users"].map((x) => User.fromJson(x))),
+  factory User.fromJson(Map<String, dynamic> json) => User(
+        users: List<UserModel>.from(
+            json["Users"].map((x) => UserModel.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -17,8 +15,8 @@ class MyApi {
       };
 }
 
-class User {
-  User({
+class UserModel {
+  UserModel({
     this.id,
     this.email,
     this.name,
@@ -31,7 +29,7 @@ class User {
   String department;
   String batch;
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         id: json["id"],
         email: json["Email"],
         name: json["Name"],
@@ -45,5 +43,47 @@ class User {
         "Name": name,
         "Department": department,
         "Batch": batch,
+      };
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+class Contacts {
+  Contacts({
+    this.contacts,
+  });
+
+  List<ContactsModel> contacts;
+
+  factory Contacts.fromJson(Map<String, dynamic> json) => Contacts(
+        contacts: List<ContactsModel>.from(
+            json["Contacts"].map((x) => ContactsModel.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "Contacts": List<dynamic>.from(contacts.map((x) => x.toJson())),
+      };
+}
+
+class ContactsModel {
+  ContactsModel({
+    this.id,
+    this.email,
+    this.name,
+  });
+  int id;
+  String email;
+  String name;
+
+  factory ContactsModel.fromJson(Map<String, dynamic> json) => ContactsModel(
+        id: json["id"],
+        email: json["Email"],
+        name: json["Name"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "Email": email,
+        "Name": name,
       };
 }

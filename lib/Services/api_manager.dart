@@ -5,21 +5,23 @@ import 'package:http/http.dart' as http;
 
 class APIManager {
   var client = http.Client();
-  // ignore: avoid_init_to_null
   var userModel;
-  String url = 'http://localhost:3000/db';
-  Future<MyApi> getUsers() async {
-    return await client.get(url).then((response) {
+  var contactModel;
+
+  ///////////////////////////////////////////////////////////
+
+  Future<User> getUsers() async {
+    return await client.get('http://localhost:3000/db').then((response) {
       if (response.statusCode == 200) {
         var jsonString = response.body;
         var jsonMap = json.decode(jsonString);
-        userModel = MyApi.fromJson(jsonMap);
+        userModel = User.fromJson(jsonMap);
       }
       return userModel;
     }).catchError((e) => userModel);
   }
 
-  Future<MyApi> createUsers(CreateUser createUser) async {
+  Future<User> createUsers(CreateUser createUser) async {
     return await client.post('http://localhost:3000/Users',
         body: json.encode(createUser),
         headers: {"Content-Type": "application/json"}).then((response) {
@@ -32,7 +34,7 @@ class APIManager {
     });
   }
 
-  Future<MyApi> updateUsers(CreateUser createUser, int id) async {
+  Future updateUsers(CreateUser createUser, int id) async {
     return await client.put('http://localhost:3000/Users/$id',
         body: json.encode(createUser),
         headers: {"Content-Type": "application/json"}).then((response) {
@@ -45,7 +47,7 @@ class APIManager {
     });
   }
 
-  Future<MyApi> deleteUsers(int id) async {
+  Future deleteUsers(int id) async {
     return await client.delete('http://localhost:3000/Users/$id',
         headers: {"Content-Type": "application/json"}).then((response) {
       print('${response.statusCode}');
@@ -55,5 +57,19 @@ class APIManager {
     }).catchError((e) {
       print('NOOOOOOOOOOOOOOOOOOOO');
     });
+  }
+
+  ////////////////////////////////////////////////////////////////////////
+
+  Future<Contacts> getContacts(int id) async {
+    return await client.get('http://localhost:3000/Users/$id').then((response) {
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        var jsonString = response.body;
+        var jsonMap = json.decode(jsonString);
+        contactModel = Contacts.fromJson(jsonMap);
+      }
+      return contactModel;
+    }).catchError((e) => contactModel);
   }
 }
