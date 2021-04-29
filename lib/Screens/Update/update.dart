@@ -48,7 +48,7 @@ class _UpdateDataState extends State<UpdateData> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Data'),
+        title: Text('Update Data'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(

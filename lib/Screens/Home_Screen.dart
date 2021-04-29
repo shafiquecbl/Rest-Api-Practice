@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_api/Screens/Create/create.dart';
 import 'package:flutter_api/Screens/Update/update.dart';
 import 'package:flutter_api/Services/api_manager.dart';
+import 'package:flutter_api/constants.dart';
 import 'package:flutter_api/navigator.dart';
 
 import '../Models/Users.dart';
@@ -52,11 +53,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: snapshot.data.users.length,
                 itemBuilder: (context, index) {
                   var user = snapshot.data.users[index];
-                  var contact = user.contacts[0];
+                  var contact = user.contacts;
                   return Card(
+                    elevation: 2,
+                    shadowColor: Colors.purpleAccent,
                     child: ExpansionTile(
                       title: Text(user.email),
                       children: [
+                        Text(contact != null ? contact[0].name : 'No Contacts'),
                         SizedBox(
                           height: 20,
                         ),
@@ -89,9 +93,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             ElevatedButton.icon(
                               onPressed: () {
                                 APIManager().deleteUsers(user.id).then((value) {
-                                  setState(() {
-                                    _userModel = APIManager().getUsers();
-                                  });
                                   showDeletedDialog(context);
                                 });
                               },
@@ -129,6 +130,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text("Done"),
                 onPressed: () {
                   Navigator.of(context).pop();
+                  setState(() {
+                    _userModel = APIManager().getUsers();
+                  });
                 },
               ));
         });
